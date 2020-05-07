@@ -83,10 +83,8 @@ export default {
             display: flex
             justify-content: space-between
             align-items: center
-
             .setting
                 display: flex
-                
                 span
                     padding: 5px
                     border-radius: 2px
