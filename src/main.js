@@ -8,7 +8,7 @@ Vue.use(TextareaAutosize)
 
 
 import 'bootstrap/dist/css/bootstrap.min.css'
-import './assets/main.css'
+import './assets/sass/main.sass'
 
 Vue.config.productionTip = false
 

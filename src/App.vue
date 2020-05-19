@@ -1,20 +1,18 @@
 <template>
   <div class="container mt-4">
-    <div class="row">
-      <Header :blocks="blocks"/>
-      <Blocks 
-        :blocks="blocks"
-        @delete="deleteBlock($event)"
-        @blocksMove="blocksMove($event)"
-      />
-      <AddNewBlock @newBlock="newBlock($event)" class="mb-4"/>
-    </div>
+    <Header :section="section"/>
+
+    <Section :section="section"
+        @delete="deleteSection($event)"
+        @moveSection="moveSection($event)"/>
+
+    <AddNewSection @newBlock="newSection($event)" type="Section" class="mb-4"/>
   </div>
 </template>
 
 <script>
-import AddNewBlock from './components/AddNewBlock.vue'
-import Blocks from './components/Blocks.vue'
+import AddNewSection from './components/AddNewSection.vue'
+import Section from './components/Section.vue'
 import Header from './components/Header.vue'
 
 const arrayMove = require('array-move');
@@ -23,36 +21,43 @@ export default {
   name: 'app',
   data() {
     return {
-      blocks: []
+      section: []
     }
   },
   components: {
-    AddNewBlock,
-    Blocks,
+    AddNewSection,
+    Section,
     Header
   },
   methods: {
-    newBlock(data) {
+    newSection(data) {
       let elements = data;
-      this.blocks.push(elements)
+      this.section.push(elements)
     },
-    deleteBlock(index) {
-      this.blocks.splice(index, 1)
+    deleteSection(index) {
+      this.section.splice(index, 1)
     },
-    blocksMove(index) {
+    moveSection(index) {
 
       let type = index.split('-');
 
       if (type[1] == 'top') {
-        this.blocks = arrayMove(this.blocks, type[0], type[0]-1)
+        this.section = arrayMove(this.section, type[0], type[0]-1)
       } else {
-        this.blocks = arrayMove(this.blocks, type[0], type[0]+1)
+        this.section = arrayMove(this.section, type[0], type[0]+1)
       }
     }
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="sass">
+  body
+    padding-top: 60px
+
+  input, textarea
+    background: none
+    border: none
+    outline: 0 !important
 
 </style>

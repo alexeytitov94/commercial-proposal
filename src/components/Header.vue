@@ -1,15 +1,14 @@
 <template>
     <div class="header">
-        <button class="btn btn-blue" @click="createKp"> Сформировать КП </button>
+        <button class="btn btn-blue" @click="createKp"> Create DOCX </button>
     </div>
 </template>
 
 <script>
 export default {
-    props: ['blocks'],
+    props: ['section'],
     methods: {
         createKp() {
-            //console.log(this.blocks)
         }
     }
 }
