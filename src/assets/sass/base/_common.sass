@@ -1,0 +1,83 @@
+
+.modal-vue-panel::-webkit-scrollbar-thumb
+  background-color: #1c064d!important
+
+.modal-vue-panel::-webkit-scrollbar-track
+  box-shadow: inset 0 0 6px rgb(241, 241, 241)!important
+  -webkit-box-shadow: inset 0 0 6px rgb(241, 241, 241)!important
+  background-color: #f1f1f1!important
+  
+.modal-vue
+
+  .modal-vue-panel
+    background: #fff
+    max-height: 90%!important
+    border: 2px solid #1c064d!important
+    border-radius: 6px!important
+
+  .modal-vue-overlay
+    backdrop-filter: blur(6px)
+    background-color: rgba(255, 255, 255, 0.72)!important
+
+
+  .modal-vue---close-icon
+      width: 25px!important
+      height: 25px!important
+      z-index: 1000!important
+      img
+          width: 25px!important
+          height: 25px!important
+          opacity: .5
+
+          &:hover
+              opacity: 1
+
+
+
+.loader
+    position: relative
+    margin: 0 auto
+    width: 27px
+
+    &:before
+        content: ''
+        display: block
+        padding-top: 100%
+
+    .circular
+        -webkit-animation: rotateqwe 2s linear infinite
+                animation: rotateqwe 2s linear infinite
+        height: 100%
+        -webkit-transform-origin: center center
+                transform-origin: center center
+        width: 100%
+        position: absolute
+        top: 0
+        bottom: 0
+        left: 0
+        right: 0
+        margin: auto
+
+        .path
+            stroke-dasharray: 1, 200
+            stroke-dashoffset: 0
+            -webkit-animation: dashqwe 1.5s ease-in-out infinite, color 6s ease-in-out infinite
+                    animation: dashqwe 1.5s ease-in-out infinite, color 6s ease-in-out infinite
+            stroke-linecap: round
+            stroke: #fff
+
+@-webkit-keyframes rotateqwe
+  100%
+    -webkit-transform: rotate(360deg)
+            transform: rotate(360deg)
+
+@keyframes dashqwe
+  0%
+    stroke-dasharray: 1, 200
+    stroke-dashoffset: 0
+  50%
+    stroke-dasharray: 89, 200
+    stroke-dashoffset: -35px
+  100%
+    stroke-dasharray: 89, 200
+    stroke-dashoffset: -124px

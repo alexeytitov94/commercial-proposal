@@ -2,29 +2,32 @@
   <div class="row">
     <div class="col-sm-12" :class="{'text-center': btnAddBlock}">
 
-      <button class="btn btn-blue btn-large" v-if="btnAddBlock" @click="btnAddBlockElements">Add {{type}}</button>
+      <button class="btn btn-blue" v-if="btnAddBlock" @click="btnAddBlockElements">Добавить {{type}}</button>
 
       <div class="elements text-center" v-if="!btnAddBlock">
 
           <div class="title mb-3">
-            <h4>Add New {{type}}</h4>
+            <h4>Добавить {{type}}</h4>
             <div class="close" @click="btnAddBlock = !btnAddBlock">
-              <img src="../assets/image/svg/delete.svg" alt="close">
+              <img src="@/assets/image/svg/delete.svg" alt="close">
             </div>
           </div>
 
-          <div class="row elements-container">
-              <div class="col-sm-3" v-for="(item, index) in elements" :class="{'active':item.active}" :key="index">
+          <carousel class="elements-container" :paginationEnabled="false" :perPageCustom="[[768, 5], [1024, 7]]">
+            <slide v-for="(item, index) in elements" :key="index">
+              <div class="element-item" :class="{'active':item.active}">
                 <div class="item text-center" @click="choseElements(index)">
                   <span class="title">
                     {{item.title}}
                   </span>
                 </div>
               </div>
-          </div>
+            </slide>
+          </carousel>
           
-          <div class="row elements-item-products mt-3">
-            <div class="col-sm-3" v-for="(item, index) in elementsChose.element.table" :class="{'active':item.active}" :key="index">
+          <carousel class="elements-item-products mt-3" :paginationEnabled="false" :perPageCustom="[[768, 5], [1024, 5]]">
+            <slide v-for="(item, index) in elementsChose.element.table" :key="index">
+              <div  class="elements-item-product"  :class="{'active':item.active}">
                 <div class="item text-center" @click="choseElementsProducts(index)">
                   <span class="title">
                     {{item.product_title}}
@@ -34,8 +37,10 @@
                   </span>
                 </div>
               </div>
-          </div>
-          <button class="btn btn-blue mt-4" @click="addNewBlock">Add {{type}}</button>
+            </slide>
+          </carousel>
+
+          <button class="btn btn-blue mt-4" @click="addNewBlock">Добавить {{type}}</button>
       </div>
     </div>
   </div>
@@ -53,6 +58,9 @@ export default {
       elementsChose: {
         element: [],
         product: []
+      },
+      settings: {
+        maxScrollbarLength: 60
       }
     }
   },
@@ -86,6 +94,7 @@ export default {
 
         ctx.elementsChose.element = ctx.elements[0];
         ctx.elementsChose.product = ctx.elements[0].table[0]
+
       });
     },
     choseElements(index) {
@@ -113,6 +122,16 @@ export default {
       this.elementsChose.product.description_field = '';
       this.elementsChose.product.roll = false;
 
+      let newListProduct = []
+      for(let listProduct of this.elementsChose.product.list_description) {
+          newListProduct.push({
+            'title_list_description':listProduct
+          });
+      }
+
+
+      this.elementsChose.product.list_description = newListProduct
+
       let result = {
         "title": this.elementsChose.element.title,
         "description": this.elementsChose.element.description,
@@ -120,7 +139,6 @@ export default {
         "full_price": this.elementsChose.element.full_price ? this.elementsChose.element.full_price:'0',
         "products": [this.elementsChose.product]
       }
-
 
       this.$emit('newBlock', result)
       this.btnAddBlock = !this.btnAddBlock
@@ -134,44 +152,47 @@ export default {
 </script>
 
 <style scoped lang="sass">
-  .elements
-    width: 100%
-    padding: 20px
+.elements
+  width: 100%
 
-    .title
-      display: flex
-      justify-content: space-between
-      align-items: center
-      align-content: center
+  .title
+    display: flex
+    justify-content: space-between
+    align-items: center
+    align-content: center
 
-      img
-        width: 25px
-        height: 25px
+    img
+      width: 25px
+      height: 25px
 
-    .elements-container
+  .elements-container
+    .element-item
+        margin: 10px
 
-    .active .item
-        background: #1c064d
-        color: #fff
+  .active .item
+      background: #1c064d
+      color: #fff
 
-    .item
-      display: flex
-      justify-content: center
-      align-items: center
-      border: 1px solid rgba(201, 201, 201, 0.19)
-      box-sizing: border-box
-      box-shadow: 0px 5px 10px rgba(88, 88, 88, 0.18)
-      border-radius: 6px
-      min-height: 80px
-      font-weight: 500
-      font-size: .80rem
-      cursor: pointer
-      background: #fff
-      padding: 10px
-      flex-direction: column
+  .item
+    display: flex
+    justify-content: center
+    align-items: center
+    border: 1px solid rgba(201, 201, 201, 0.19)
+    box-sizing: border-box
+    box-shadow: 0px 5px 10px rgba(88, 88, 88, 0.18)
+    border-radius: 6px
+    min-height: 80px
+    font-weight: 500
+    font-size: .80rem
+    cursor: pointer
+    background: #fff
+    padding: 10px
+    flex-direction: column
 
-    .elements-item-products
-      padding: 25px 10px
-      border-radius: 3px
-      background: #eeeeee63
+  .elements-item-products
+    border-radius: 3px
+    background: #eeeeee63
+
+    .elements-item-product
+      margin: 10px
 </style>

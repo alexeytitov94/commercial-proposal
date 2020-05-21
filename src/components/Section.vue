@@ -4,9 +4,9 @@
             <div class="title mb-3">
                 <h3><input type="text" v-model="item.title"></h3>
                 <div class="setting">
-                    <span v-if="index > 0"><img src="../assets/image/svg/arrow-top.svg" alt="top" @click="$emit('moveSection', index + '-top')"></span>
-                    <span v-if="index < section.length-1"><img src="../assets/image/svg/arrow-bottom.svg" alt="bottom" @click="$emit('moveSection', index + '-bottom')"></span>
-                    <span><img src="../assets/image/svg/delete.svg" alt="delete" @click="$emit('delete', index)"></span>
+                    <span v-if="index > 0"><img src="@/assets/image/svg/arrow-top.svg" alt="top" @click="$emit('moveSection', index + '-top')"></span>
+                    <span v-if="index < section.length-1"><img src="@/assets/image/svg/arrow-bottom.svg" alt="bottom" @click="$emit('moveSection', index + '-bottom')"></span>
+                    <span><img src="@/assets/image/svg/delete.svg" alt="delete" @click="$emit('delete', index)"></span>
                 </div>
             </div>
 
@@ -26,8 +26,8 @@
                 <div class="product-item" v-for="(productItem, indexProduct) in item.products" :key="indexProduct" :class="{'roll-up':productItem.roll}">
 
                     <div class="setting-product">
-                        <div class="roll-product-item" @click="updateProduct(index, indexProduct)"><img src="../assets/image/svg/roll.svg" alt="roll"></div>
-                        <div class="delete-product-item" @click="delete item.products.splice(indexProduct, 1);"><img src="../assets/image/svg/delete.svg" alt="delete"></div>
+                        <div class="roll-product-item" @click="updateProduct(index, indexProduct)"><img src="@/assets/image/svg/roll.svg" alt="roll"></div>
+                        <div class="delete-product-item" @click="delete item.products.splice(indexProduct, 1);"><img src="@/assets/image/svg/delete.svg" alt="delete"></div>
                     </div>
 
                     <div class="group title-product">
@@ -39,12 +39,12 @@
                         <span>Описание</span>
                         <div class="description">
                             <div class="description-item" v-for="(item_d, index) in productItem.list_description" :key="index">
-                                <span>{{item_d}}</span>
-                                <div class="delete" @click="delete productItem.list_description.splice(index, 1);"><img src="../assets/image/svg/delete.svg" alt="delete"></div>
+                                <input type="text" v-model="item_d.title_list_description">
+                                <div class="delete" @click="delete productItem.list_description.splice(index, 1);"><img src="@/assets/image/svg/delete.svg" alt="delete"></div>
                             </div>
                             <div class="add-description mt-2">
                                 <input type="text" v-model="productItem.description_field">
-                                <button type="button" class="btn btn-blue" @click="addDescription(productItem, productItem.description_field)">Add</button>
+                                <button type="button" class="btn btn-blue" @click="addDescription(productItem, productItem.description_field)">Добавить</button>
                             </div>
                         </div>
                     </div>
@@ -61,12 +61,15 @@
             </div>
 
             <div class="product_block" >
-                <AddNewSection @newBlock="addProduct($event, item)" type="Product" class="mb-4"/>
+                <AddNewSection @newBlock="addProduct($event, item)" type="Товар" class="mb-4"/>
             </div>
 
             <div class="group">
                 <span>Итоговая стоимость</span>
-                <input v-model="item.full_price"/>
+                <div class="price-document">
+                    <span class="full-price-section">{{item | fullPrice}}</span>
+                    <input v-model="documents.type_price"/>
+                </div>
             </div>
         </div>
     </div>
@@ -78,10 +81,12 @@ import AddNewSection from './AddNewSection.vue'
 
 export default {
     components: { AddNewSection },
-    props: ['section'],
+    props: ['section', 'documents'],
     methods: {
         addDescription(item, name) {
-            item.list_description.push(name)
+            item.list_description.push({
+                'title_list_description':name
+            })
             item.description_field = ''
         },
         addProduct(event, item) {
@@ -95,19 +100,30 @@ export default {
             this.section[0].title = title;
         }
     },
+    filters: {
+      fullPrice(product) {
+          let price = 0;
+          for(let item of product.products) {
+                price += (+(String(item.price.replace(' ',''))))
+                item.price = String(item.price).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ")
+          }
+          
+
+        return String(price).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ")
+      }  
+    }
 }
 
 </script>
 
 <style scoped lang="sass">         
 .section
-    margin-bottom: 20px
     padding: 15px
     border: 2px solid #1c064d
     border-radius: 4px
+    margin: 0 15px 20px 15px
 
     .product_block
-        width: 100%
 
     .title
         width: 100%
@@ -149,6 +165,21 @@ export default {
             display: block
             font-size: .9rem
             color: #0000008a
+            margin-right: 10px
+
+            &.full-price-section
+                color: #000
+                font-size: 1rem
+
+        .price-document
+            display: flex
+
+            span
+                width: 100px
+                margin-right: 10px
+            input
+                width: 100px
+                margin-right: 10px
 
     .product
         display: flex
@@ -179,9 +210,12 @@ export default {
 
             .setting-product
                 position: absolute
-                top: 15px
-                right: 15px
+                top: 11px
+                right: 11px
                 display: flex
+                background: #fafafa
+                padding: 4px
+                padding-left: 10px
 
                 .roll-product-item
                     width: 22px
@@ -213,6 +247,7 @@ export default {
 
                 input
                     width: 80px
+                    margin-right: 10px
 
     .description
         .add-description
@@ -239,6 +274,7 @@ export default {
                 color: #000
 
             .delete
+                padding-left: 10px
                 cursor: pointer
 
                 &:hover

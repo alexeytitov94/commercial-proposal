@@ -1,12 +1,14 @@
 <template>
   <div class="container mt-4">
-    <Header :section="section"/>
+    <Header :section="section" :documents="documents"/>
 
     <Section :section="section"
+        :documents="documents"
         @delete="deleteSection($event)"
         @moveSection="moveSection($event)"/>
 
-    <AddNewSection @newBlock="newSection($event)" type="Section" class="mb-4"/>
+    <AddNewSection @newBlock="newSection($event)" type="Секцию" class="mb-4"/>
+
   </div>
 </template>
 
@@ -21,7 +23,13 @@ export default {
   name: 'app',
   data() {
     return {
-      section: []
+      section: [],
+      documents: {
+        title_document: 'Коммерческое предложение для компании',
+        full_price: 0,
+        type_price: '₽',
+        day_complete: 5,
+      }
     }
   },
   components: {

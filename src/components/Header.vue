@@ -1,16 +1,229 @@
 <template>
     <div class="header">
-        <button class="btn btn-blue" @click="createKp"> Create DOCX </button>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="header-wrapper">
+                        <button class="btn btn-default" @click="templateGet=true"> Шаблоны </button>
+                        <button class="btn btn-blue" @click="open=true"> Создать DOCX </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <vue-modaltor :visible="open" @hide="open = false" :resize-width='{1500:"30%", 1200:"40%",992:"50%",768:"60%", 500:"75%", 450:"93%"}' :closeScroll="false">
+            <template slot="close-icon">
+                <img src="@/assets/image/svg/delete.svg" alt="close">
+            </template>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="group mt-4">
+                            <span class="title">Название документа</span>
+                            <input v-model="documents.title_document"/>
+                        </div>
+                        <div class="group">
+                            <span class="title">Общая стоимость</span>
+                            <div class="price-document">
+                                <span>{{fullPrice}}</span>
+                                <input v-model="documents.type_price"/>
+                            </div>
+                        </div>
+                        <div class="group">
+                            <span class="title">Срок выполнения</span>
+                            <div class="price-document">
+                                <input v-model="documents.day_complete"/>
+                                <span>рабочих дней</span>
+                            </div>
+                        </div>
+
+                        <div class="group text-center mt-4">
+                            <button class="btn btn-blue btn-load" @click="createKp"> 
+                                <span v-if="!create">Создать DOCX</span>
+                                 <div v-if="create" class="loader">
+                                    <svg class="circular" viewBox="25 25 50 50">
+                                        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
+                                    </svg>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </vue-modaltor>
+
+        <!-- Template -->
+        <vue-modaltor :visible="templateGet" @hide="templateGet = false" :resize-width='{1500:"50%", 1200:"60%",992:"70%",768:"80%", 500:"85%", 450:"93%"}' :closeScroll="false">
+            <template slot="close-icon">
+                <img src="@/assets/image/svg/delete.svg" alt="close">
+            </template>
+            <ChoseTemplate/>
+        </vue-modaltor>
     </div>
 </template>
 
 <script>
+
+//Word
+import '@/assets/plugins/word/docxtemplater.js'
+import '@/assets/plugins/word/pizzip.js'
+import '@/assets/plugins/word/pizzip-utils.js'
+import { saveAs } from 'file-saver'
+
+import ChoseTemplate from '@/components/ChoseTemplate.vue'
+
 export default {
-    props: ['section'],
-    methods: {
-        createKp() {
+    data() {
+        return {
+            open: false,
+            create: false,
+            templateGet: false
         }
-    }
+    },
+    components: { ChoseTemplate },
+    props: ['section', 'documents'],
+    methods: {
+        test() {
+               
+        },
+        createKp() {
+
+                var ctx = this;
+
+                ctx.create = !ctx.create;
+
+                let arData = ctx.section;
+                let documents = ctx.documents;
+
+                ctx.loadFile("https://b24apps.ru/local/b24apps/alexey/kp_stockwell/big_test/file.php",function(error,content){
+                if (error) { throw error }
+
+                // The error object contains additional information when logged with JSON.stringify (it contains a properties object containing all suberrors).
+                function replaceErrors(key, value) {
+                    if (value instanceof Error) {
+                        return Object.getOwnPropertyNames(value).reduce(function(error, key) {
+                            error[key] = value[key];
+                            return error;
+                        }, {});
+                    }
+                    return value;
+                }
+
+                function errorHandler(error) {
+                    console.log(JSON.stringify({error: error}, replaceErrors));
+
+                    if (error.properties && error.properties.errors instanceof Array) {
+                        const errorMessages = error.properties.errors.map(function (error) {
+                            return error.properties.explanation;
+                        }).join("\n");
+                        console.log('errorMessages', errorMessages);
+                        // errorMessages is a humanly readable message looking like this :
+                        // 'The tag beginning with "foobar" is unopened'
+                    }
+                    throw error;
+                }
+
+                var zip = new PizZip(content);
+                var doc;
+                try {
+                    doc=new window.docxtemplater(zip);
+                } catch(error) {
+                    // Catch compilation errors (errors caused by the compilation of the template : misplaced tags)
+                    errorHandler(error);
+                }
+
+                // doc.setData({
+                //     "section": [
+                //         {
+                //             "title": "Лицензия Битрикс24",
+                //             "description": "На основании озвученных задач (до детального составления технического задания) оптимальным выбором может являться использование облачной версии Битрикс24 с тарифом «Команда».\n 1С-Битрикс позволяет переходить с одного тарифа на другой, а также при необходимости перейти в коробочную версию Битрикс24. \n",
+                //             "table_title": "Доработка портала Битрикс24",
+                //             "full_price": "57 480 ₽",
+                //             "table": [
+                //                 {
+                //                     "index": 1,
+                //                     "product_title" :"'Битрикс24'. Облачная версия. Тариф «Команда»",
+                //                     "list_description": [
+                //                         { 'title_list_description': "- Указана стоимость за 1 месяц, при условии оформления подписки на 1 год." },
+                //                         { 'title_list_description': "- Разработка архитектуры решения" },
+                //                         { 'title_list_description': "- Формализация логики бизнес-процессов в архитектуре Битрикс24" },
+                //                         { 'title_list_description': "- Уточнение деталей с сотрудниками, принимающими участие в бизнес-процессах компании" },
+                //                     ],
+                //                     "price": "4 790 ₽/мес"
+                //                 },
+                //                 {
+                //                     "index": 1,
+                //                     "product_title" :"'Битрикс24'. Облачная версия. Тариф «Команда»",
+                //                     "list_description": [
+                //                         { 'title_list_description': "- Указана стоимость за 1 месяц, при условии оформления подписки на 1 год." },
+                //                         { 'title_list_description': "- Разработка архитектуры решения" },
+                //                         { 'title_list_description': "- Формализация логики бизнес-процессов в архитектуре Битрикс24" },
+                //                         { 'title_list_description': "- Уточнение деталей с сотрудниками, принимающими участие в бизнес-процессах компании" },
+                //                     ],
+                //                     "price": "4 790 ₽/мес"
+                //                 },
+
+                //             ]
+                //         },
+                //     ]
+                // });
+
+                doc.setData({
+                    "title_document": documents.title_document,
+                    "full_price": documents.full_price + " " + documents.type_price,
+                    "date_kp": documents.day_complete,
+                    "section": arData
+                });
+
+                try {
+                    // render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
+                    doc.render();
+                }
+                catch (error) {
+                    // Catch rendering errors (errors relating to the rendering of the template : angularParser throws an error)
+                    errorHandler(error);
+                }
+
+                var out=doc.getZip().generate({
+                    type:"blob",
+                    mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                }) //Output the document using Data-URI
+
+
+                saveAs(out,"kp.docx")
+
+                ctx.create = !ctx.create;
+            })
+        },
+        loadFile(url,callback){
+            PizZipUtils.getBinaryContent(url,callback);
+        },
+    },
+    computed: {
+        fullPrice() {
+
+            let price = 0;
+
+            if (this.section) {
+                for(let item of this.section) {
+
+                    let price_section = 0;
+                    for(let item_product of item.products) {
+                        price += (+(String(item_product.price.replace(' ',''))))
+                        price_section += (+(String(item_product.price.replace(' ','')))) //+price_section + (+item_product.price)
+                    }
+
+                    item.full_price = String(price_section).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ")
+                }
+            }
+
+            this.documents.full_price = String(price).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ")
+
+            return String(price).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ")
+        }
+    },
 }
 </script>
 
@@ -24,7 +237,45 @@ export default {
     background: white
     box-shadow: 0px 4px 4px rgba(166, 166, 166, 0.25)
     z-index: 1000
-    display: flex
-    justify-content: flex-end
-    padding: 10px 30px
+
+    .btn-load
+        min-width: 170px
+        height: 45px
+
+    .header-wrapper
+        padding: 10px 0
+        display: flex
+        justify-content: flex-end
+        width: 100%
+        height: 65px
+
+        .btn 
+            margin-right: 15px
+
+.group
+    margin-bottom: 15px
+
+    .title
+        font-size: .9rem
+        color: #0000008a
+
+    &:last-child
+        margin-bottom: 0
+    span
+        display: block
+
+        &.full-price-section
+            color: #000
+            font-size: 1rem
+
+    .price-document
+        display: flex
+
+        span
+            width: 120px
+            margin-right: 10px
+        input
+            width: 120px
+            margin-right: 10px
+
 </style>
