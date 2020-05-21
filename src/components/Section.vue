@@ -108,7 +108,6 @@ export default {
                 item.price = String(item.price).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ")
           }
           
-
         return String(price).replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ")
       }  
     }
