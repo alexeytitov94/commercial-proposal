@@ -70,6 +70,13 @@
 import '@/assets/plugins/word/docxtemplater.js'
 import '@/assets/plugins/word/pizzip.js'
 import '@/assets/plugins/word/pizzip-utils.js'
+import '@/assets/plugins/word/imagemodule.js'
+
+import '@/assets/plugins/jszip/jszip.js'
+import '@/assets/plugins/jszip/jszip-utils.js'
+
+
+
 import { saveAs } from 'file-saver'
 
 import ChoseTemplate from '@/components/ChoseTemplate.vue'
@@ -85,13 +92,9 @@ export default {
     components: { ChoseTemplate },
     props: ['section', 'documents'],
     methods: {
-        test() {
-               
-        },
         createKp() {
 
                 var ctx = this;
-
                 ctx.create = !ctx.create;
 
                 let arData = ctx.section;
@@ -100,7 +103,6 @@ export default {
                 ctx.loadFile("https://b24apps.ru/local/b24apps/alexey/kp_stockwell/big_test/file.php",function(error,content){
                 if (error) { throw error }
 
-                // The error object contains additional information when logged with JSON.stringify (it contains a properties object containing all suberrors).
                 function replaceErrors(key, value) {
                     if (value instanceof Error) {
                         return Object.getOwnPropertyNames(value).reduce(function(error, key) {
@@ -125,71 +127,108 @@ export default {
                     throw error;
                 }
 
+
+                function base64DataURLToArrayBuffer(dataURL) {
+                    const base64Regex = /^data:image\/(png|jpg|svg|svg\+xml);base64,/;
+                    if (!base64Regex.test(dataURL)) {
+                        return false;
+                    }
+                    const stringBase64 = dataURL.replace(base64Regex, "");
+                    let binaryString;
+                    if (typeof window !== "undefined") {
+                        binaryString = window.atob(stringBase64);
+                    } else {
+                        binaryString = new Buffer(stringBase64, "base64").toString("binary");
+                    }
+                    const len = binaryString.length;
+                    const bytes = new Uint8Array(len);
+                    for (let i = 0; i < len; i++) {
+                        const ascii = binaryString.charCodeAt(i);
+                        bytes[i] = ascii;
+                    }
+                    return bytes.buffer;
+                }
+
+
+
+                const imageOpts = {
+                    getImage(tag) {
+                        return base64DataURLToArrayBuffer(tag);
+                    },
+                    getSize() {
+                        return [100, 100];
+                    },
+                };
+
+
+
+
+                var imageModule = new ImageModule(imageOpts);
+
                 var zip = new PizZip(content);
                 var doc;
                 try {
-                    doc=new window.docxtemplater(zip);
+                    doc=new window.docxtemplater()
+                    .loadZip(zip)
+                    .attachModule(imageModule);
                 } catch(error) {
-                    // Catch compilation errors (errors caused by the compilation of the template : misplaced tags)
                     errorHandler(error);
                 }
 
-                // doc.setData({
-                //     "section": [
-                //         {
-                //             "title": "Лицензия Битрикс24",
-                //             "description": "На основании озвученных задач (до детального составления технического задания) оптимальным выбором может являться использование облачной версии Битрикс24 с тарифом «Команда».\n 1С-Битрикс позволяет переходить с одного тарифа на другой, а также при необходимости перейти в коробочную версию Битрикс24. \n",
-                //             "table_title": "Доработка портала Битрикс24",
-                //             "full_price": "57 480 ₽",
-                //             "table": [
-                //                 {
-                //                     "index": 1,
-                //                     "product_title" :"'Битрикс24'. Облачная версия. Тариф «Команда»",
-                //                     "list_description": [
-                //                         { 'title_list_description': "- Указана стоимость за 1 месяц, при условии оформления подписки на 1 год." },
-                //                         { 'title_list_description': "- Разработка архитектуры решения" },
-                //                         { 'title_list_description': "- Формализация логики бизнес-процессов в архитектуре Битрикс24" },
-                //                         { 'title_list_description': "- Уточнение деталей с сотрудниками, принимающими участие в бизнес-процессах компании" },
-                //                     ],
-                //                     "price": "4 790 ₽/мес"
-                //                 },
-                //                 {
-                //                     "index": 1,
-                //                     "product_title" :"'Битрикс24'. Облачная версия. Тариф «Команда»",
-                //                     "list_description": [
-                //                         { 'title_list_description': "- Указана стоимость за 1 месяц, при условии оформления подписки на 1 год." },
-                //                         { 'title_list_description': "- Разработка архитектуры решения" },
-                //                         { 'title_list_description': "- Формализация логики бизнес-процессов в архитектуре Битрикс24" },
-                //                         { 'title_list_description': "- Уточнение деталей с сотрудниками, принимающими участие в бизнес-процессах компании" },
-                //                     ],
-                //                     "price": "4 790 ₽/мес"
-                //                 },
-
-                //             ]
-                //         },
-                //     ]
-                // });
-
                 doc.setData({
-                    "title_document": documents.title_document,
-                    "full_price": documents.full_price + " " + documents.type_price,
-                    "date_kp": documents.day_complete,
-                    "section": arData
+                    "title_document": 'title_document',
+                    "full_price": 'full_price',
+                    "date_kp": 'date_kp',
+                    "section": [
+                        {
+                            "title": "Лицензия Битрикс24",
+                            "description": "На основании озвученных задач (до детального составления технического задания) оптимальным выбором может являться использование облачной версии Битрикс24 с тарифом «Команда».\n 1С-Битрикс позволяет переходить с одного тарифа на другой, а также при необходимости перейти в коробочную версию Битрикс24. \n",
+                            "table_title": "Доработка портала Битрикс24",
+                            "full_price": "57 480 ₽",
+                            "products": [
+                                {
+                                    "index": 1,
+                                    "active": true,
+                                    "description_field": 'test',
+                                    "roll": false,
+                                    "product_title" :"'Битрикс24'. Облачная версия. Тариф «Команда»",
+                                    "list_description": [
+                                        { 'title_list_description': "- Указана стоимость за 1 месяц, при условии оформления подписки на 1 год." },
+                                        { 'title_list_description': "- Разработка архитектуры решения" },
+                                        { 'title_list_description': "- Формализация логики бизнес-процессов в архитектуре Битрикс24" },
+                                        { 'title_list_description': "- Уточнение деталей с сотрудниками, принимающими участие в бизнес-процессах компании" },
+                                    ],
+                                    "price": "4 790 ₽/мес",
+                                    "type_price": "₽",
+                                    "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QIJBywfp3IOswAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAkUlEQVQY052PMQqDQBREZ1f/d1kUm3SxkeAF/FdIjpOcw2vpKcRWCwsRPMFPsaIQSIoMr5pXDGNUFd9j8TOn7kRW71fvO5HTq6qqtnWtzh20IqE3YXtL0zyKwAROQLQ5l/c9gHjfKK6wMZjADE6s49Dver4/smEAc2CuqgwAYI5jU9NcxhHEy60sni986H9+vwG1yDHfK1jitgAAAABJRU5ErkJggg=="
+                                    //"image": "https://aokmo.ru/upload/iblock/7fe/road_sign_361513_960_720.jpg"
+
+                                }
+                            ]
+                        },
+                    ]
                 });
 
+                // doc.setData({
+                //     "title_document": documents.title_document,
+                //     "full_price": documents.full_price + " " + documents.type_price,
+                //     "date_kp": documents.day_complete,
+                //     "section": arData
+                // });
+
+                console.log(arData)
+
                 try {
-                    // render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
                     doc.render();
                 }
                 catch (error) {
-                    // Catch rendering errors (errors relating to the rendering of the template : angularParser throws an error)
                     errorHandler(error);
                 }
 
                 var out=doc.getZip().generate({
                     type:"blob",
                     mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                }) //Output the document using Data-URI
+                })
 
 
                 saveAs(out,"kp.docx")

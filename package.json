@@ -12,7 +12,9 @@
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
     "core-js": "^2.6.5",
+    "docxtemplater-image-module-free": "^1.1.1",
     "file-saver": "^2.0.2",
+    "jszip": "^3.5.0",
     "vue": "^2.6.10",
     "vue-carousel": "^0.18.0",
     "vue-custom-scrollbar": "^1.2.0",
@@ -59,7 +61,7 @@
   ],
   "lint-staged": {
     "*.{js,vue}": [
-      "vue-cli-service lint",
+      "vue-cli-service lint"
     ]
   }
 }
