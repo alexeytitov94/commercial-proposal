@@ -13,7 +13,7 @@
             <div class="group">
                 <span>Описание Раздела</span>
                 <textarea-autosize
-                        v-model="item.description"
+                    v-model="item.description"
                 />
             </div>
 
@@ -115,174 +115,177 @@ export default {
 
 </script>
 
-<style scoped lang="sass">         
-.section
-    padding: 15px
-    border: 2px solid #1c064d
-    border-radius: 4px
-    margin: 0 15px 20px 15px
-
-    .product_block
-
-    .title
-        width: 100%
-        display: flex
-        justify-content: space-between
-        align-items: center
-        align-content: center
-
-        h3
-            width: 100%
-            
-            input
-                width: 100%
-        
-        .setting
-            display: flex
-
-            span
-                margin-left: 15px
-                cursor: pointer
-
-                &:hover
-                    img
-                        opacity: 1
-            img
-                width: 25px
-                height: 25px
-                opacity: .5
-
-    .group
-        margin-bottom: 15px
-
-        &:first-child
-            margin-bottom: 0
-
-        &:last-child
-            margin-bottom: 0
-        span
-            display: block
-            font-size: .9rem
-            color: #0000008a
-            margin-right: 10px
-
-            &.full-price-section
-                color: #000
-                font-size: 1rem
-
-        .price-document
-            display: flex
-
-            span
-                width: 100px
-                margin-right: 10px
-            input
-                width: 100px
-                margin-right: 10px
-
-    .product
-        display: flex
-        flex-direction: column
-        margin-bottom: 20px
-
-        .product-item
-            position: relative
-            width: 100%
-            background: #fafafa
-            padding: 15px
-            border-radius: 4px
-            margin-top: 10px
-            box-shadow: 0px 2px 7px rgba(109, 109, 109, 0.36)
-
-            &.roll-up
-                box-shadow: 0px 1px 7px rgba(109, 109, 109, 0.26)
-
-                .group
-                    display: none
-                    margin-bottom: 0
-
-                .title-product
-                    display: block
-
-                    span
-                        display: none
-
-            .setting-product
-                position: absolute
-                top: 11px
-                right: 11px
-                display: flex
-                background: #fafafa
-                padding: 4px
-                padding-left: 10px
-
-                .roll-product-item
-                    width: 22px
-                    height: 25px
-                    opacity: .5
-                    cursor: pointer
-
-                    &:hover
-                        opacity: 1
-
-                .delete-product-item
-                    width: 25px
-                    height: 25px
-                    opacity: .5
-                    cursor: pointer
-
-                    &:hover
-                        opacity: 1
-
-                .roll-product-item
-                    margin-right: 10px
-
-                img
-                    height: 100%
-                    width: 100%
-
-            .price
-                display: flex
-
-                input
-                    width: 80px
-                    margin-right: 10px
-
-    .description
-        .add-description
-            display: flex
-            justify-content: space-between
-            background: #f1f1f1
-            border-radius: 4px
-
-            input
-                padding: 5px 10px
-        .description-item
-            display: flex
-            flex-direction: row
-            align-items: center
-            align-content: center
-            justify-content: space-between
-            padding: 3px
-            border-radius: 2px
-
-            &:hover
-                background: #e1e1e15c
-
-            span
-                color: #000
-
-            .delete
-                padding-left: 10px
-                cursor: pointer
-
-                &:hover
-
-                    img
-                        opacity: 1
-                img
-                    width: 20px
-                    height: 20px
-                    opacity: .5
-
+<style scoped lang="scss">         
+.section {
+    padding: 15px;
+    border: 2px solid #1c064d;
+    border-radius: 4px;
+    margin: 0 15px 20px 15px;
+    .title {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        align-content: center;
+        h3 {
+            width: 100%;
+            input {
+                width: 100%;
+            }
+        }
+        .setting {
+            display: flex;
+            span {
+                margin-left: 15px;
+                cursor: pointer;
+                &:hover {
+                    img {
+                        opacity: 1;
+                    }
+                }
+            }
+            img {
+                width: 25px;
+                height: 25px;
+                opacity: 0.5;
+            }
+        }
+    }
+    .group {
+        margin-bottom: 15px;
+        &:first-child {
+            margin-bottom: 0;
+        }
+        &:last-child {
+            margin-bottom: 0;
+        }
+        span {
+            display: block;
+            font-size: 0.9rem;
+            color: #000000;
+            margin-right: 10px;
+            &.full-price-section {
+                color: #000;
+                font-size: 1rem;
+            }
+        }
+        .price-document {
+            display: flex;
+            span {
+                width: 100px;
+                margin-right: 10px;
+            }
+            input {
+                width: 100px;
+                margin-right: 10px;
+            }
+        }
+    }
+    .product {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+        .product-item {
+            position: relative;
+            width: 100%;
+            background: #fafafa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+            box-shadow: 0px 2px 7px rgba(109, 109, 109, 0.36);
+            &.roll-up {
+                box-shadow: 0px 1px 7px rgba(109, 109, 109, 0.26);
+                .group {
+                    display: none;
+                    margin-bottom: 0;
+                }
+                .title-product {
+                    display: block;
+                    span {
+                        display: none;
+                    }
+                }
+            }
+            .setting-product {
+                position: absolute;
+                top: 11px;
+                right: 11px;
+                display: flex;
+                background: #fafafa;
+                padding: 4px;
+                padding-left: 10px;
+                .roll-product-item {
+                    width: 22px;
+                    height: 25px;
+                    opacity: 0.5;
+                    cursor: pointer;
+                    margin-right: 10px;
+                    &:hover {
+                        opacity: 1;
+                    }
+                }
+                .delete-product-item {
+                    width: 25px;
+                    height: 25px;
+                    opacity: 0.5;
+                    cursor: pointer;
+                    &:hover {
+                        opacity: 1;
+                    }
+                }
+                img {
+                    height: 100%;
+                    width: 100%;
+                }
+            }
+            .price {
+                display: flex;
+                input {
+                    width: 80px;
+                    margin-right: 10px;
+                }
+            }
+        }
+    }
+    .description {
+        .add-description {
+            display: flex;
+            justify-content: space-between;
+            background: #f1f1f1;
+            border-radius: 4px;
+            input {
+                padding: 5px 10px;
+            }
+        }
+        .description-item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            align-content: center;
+            justify-content: space-between;
+            padding: 3px;
+            border-radius: 2px;
+            &:hover {
+                background: #e1e1e15c;
+            }
+            span {
+                color: #000;
+            }
+            .delete {
+                padding-left: 10px;
+                cursor: pointer;
+                &:hover {
+                    img {
+                        opacity: 1;
+                    }
+                }
+                img {
+                    width: 20px;
+                    height: 20px;
+                    opacity: 0.5;
+                }
+            }
+        }
+    }
+}
 </style>

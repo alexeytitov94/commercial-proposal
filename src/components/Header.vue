@@ -1,85 +1,72 @@
 <template>
-    <div class="header">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="header-wrapper">
-                        <button class="btn btn-default" @click="templateGet=true"> Шаблоны </button>
-                        <button class="btn btn-blue" @click="open=true"> Создать DOCX </button>
-                    </div>
-                </div>
-            </div>
+  <div class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="header-wrapper">
+            <button class="btn btn-blue" @click="open=true"> Создать DOCX </button>
+          </div>
         </div>
-
-
-        <vue-modaltor :visible="open" @hide="open = false" :resize-width='{1500:"30%", 1200:"40%",992:"50%",768:"60%", 500:"75%", 450:"93%"}' :closeScroll="false">
-            <template slot="close-icon">
-                <img src="@/assets/image/svg/delete.svg" alt="close">
-            </template>
-
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="group mt-4">
-                            <span class="title">Название документа</span>
-                            <input v-model="documents.title_document"/>
-                        </div>
-                        <div class="group">
-                            <span class="title">Общая стоимость</span>
-                            <div class="price-document">
-                                <span>{{fullPrice}}</span>
-                                <input v-model="documents.type_price"/>
-                            </div>
-                        </div>
-                        <div class="group">
-                            <span class="title">Срок выполнения</span>
-                            <div class="price-document">
-                                <input v-model="documents.day_complete"/>
-                                <span>рабочих дней</span>
-                            </div>
-                        </div>
-
-                        <div class="group text-center mt-4">
-                            <button class="btn btn-blue btn-load" @click="createKp"> 
-                                <span v-if="!create">Создать DOCX</span>
-                                 <div v-if="create" class="loader">
-                                    <svg class="circular" viewBox="25 25 50 50">
-                                        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
-                                    </svg>
-                                </div>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </vue-modaltor>
-
-        <!-- Template -->
-        <vue-modaltor :visible="templateGet" @hide="templateGet = false" :resize-width='{1500:"50%", 1200:"60%",992:"70%",768:"80%", 500:"85%", 450:"93%"}' :closeScroll="false">
-            <template slot="close-icon">
-                <img src="@/assets/image/svg/delete.svg" alt="close">
-            </template>
-            <ChoseTemplate/>
-        </vue-modaltor>
+      </div>
     </div>
+
+    <vue-modaltor :visible="open" @hide="open = false" :resize-width='{1500:"30%", 1200:"40%",992:"50%",768:"60%", 500:"75%", 450:"93%"}' :closeScroll="false">
+      <template slot="close-icon">
+        <img src="@/assets/image/svg/delete.svg" alt="close">
+      </template>
+
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="group mt-4">
+              <span class="title">Название документа</span>
+              <input v-model="documents.title_document"/>
+            </div>
+            <div class="group">
+              <span class="title">Общая стоимость</span>
+              <div class="price-document">
+                <span>{{fullPrice}}</span>
+                <input v-model="documents.type_price"/>
+              </div>
+          </div>
+            <div class="group">
+              <span class="title">Срок выполнения</span>
+              <div class="price-document">
+                <input v-model="documents.day_complete"/>
+                <span>рабочих дней</span>
+              </div>
+            </div>
+
+            <div class="group text-center mt-4">
+              <button class="btn btn-blue btn-load" @click="createKp"> 
+                <span v-if="!create">Создать DOCX</span>
+                <div v-if="create" class="loader">
+                  <svg class="circular" viewBox="25 25 50 50">
+                    <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
+                  </svg>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </vue-modaltor>
+  </div>
 </template>
 
 <script>
-
-//Word
 import '@/assets/plugins/word/docxtemplater.js'
 import '@/assets/plugins/word/pizzip.js'
 import '@/assets/plugins/word/pizzip-utils.js'
 import '@/assets/plugins/word/imagemodule.js'
-
 import '@/assets/plugins/jszip/jszip.js'
 import '@/assets/plugins/jszip/jszip-utils.js'
 
-
-
 import { saveAs } from 'file-saver'
 
-import ChoseTemplate from '@/components/ChoseTemplate.vue'
+let br = `
+                                                                                                                                                                                              
+`
 
 export default {
     data() {
@@ -89,16 +76,22 @@ export default {
             templateGet: false
         }
     },
-    components: { ChoseTemplate },
     props: ['section', 'documents'],
     methods: {
         createKp() {
 
                 var ctx = this;
-                ctx.create = !ctx.create;
+                ctx.create = !ctx.create
 
-                let arData = ctx.section;
-                let documents = ctx.documents;
+                let arData = ctx.section
+                let documents = ctx.documents
+
+                arData = arData.map((item) => {
+                    item.description = item.description.replace(/\n/g, br)
+                    return item
+                })
+
+                console.log(arData)
 
                 ctx.loadFile("https://b24apps.ru/local/b24apps/alexey/kp_stockwell/big_test/file.php",function(error,content){
                 if (error) { throw error }
@@ -149,8 +142,6 @@ export default {
                     return bytes.buffer;
                 }
 
-
-
                 const imageOpts = {
                     getImage(tag) {
                         return base64DataURLToArrayBuffer(tag);
@@ -159,9 +150,6 @@ export default {
                         return [100, 100];
                     },
                 };
-
-
-
 
                 var imageModule = new ImageModule(imageOpts);
 
@@ -231,55 +219,61 @@ export default {
 }
 </script>
 
-<style scoped lang="sass">
-.header
-    position: fixed
-    top: 0
-    left: 0
-    height: 65px
-    width: 100%
-    background: white
-    box-shadow: 0px 4px 4px rgba(166, 166, 166, 0.25)
-    z-index: 1000
+<style scoped lang="scss">
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: var(--white);
+  border-bottom: 1px solid var(--support-silver);
+  z-index: 1000;
 
-    .btn-load
-        min-width: 170px
-        height: 45px
+  .btn-load {
+    min-width: 170px;
+    height: 40px;
+  }
 
-    .header-wrapper
-        padding: 10px 0
-        display: flex
-        justify-content: flex-end
-        width: 100%
-        height: 65px
+  .header-wrapper {
+      padding: 10px 0;
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+  }
+}
 
-        .btn 
-            margin-right: 15px
+.group {
+  margin-bottom: 15px;
 
-.group
-    margin-bottom: 15px
+  .title {
+    font-size: 0.9rem;
+    color: #000000;
+  }
 
-    .title
-        font-size: .9rem
-        color: #0000008a
+  &:last-child {
+    margin-bottom: 0;
+  }
 
-    &:last-child
-        margin-bottom: 0
-    span
-        display: block
+  span {
+    display: block;
 
-        &.full-price-section
-            color: #000
-            font-size: 1rem
+    &.full-price-section {
+      color: #000;
+      font-size: 1rem;
+    }
+  }
+  .price-document {
+    display: flex;
 
-    .price-document
-        display: flex
+    span {
+      width: 120px;
+      margin-right: 10px;
+    }
 
-        span
-            width: 120px
-            margin-right: 10px
-        input
-            width: 120px
-            margin-right: 10px
-
+    input {
+      width: 120px;
+      margin-right: 10px;
+    }
+  }
+}
 </style>

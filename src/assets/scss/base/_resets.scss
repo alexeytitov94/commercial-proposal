@@ -1,0 +1,30 @@
+body {
+  font-family: "Google Sans";
+  font-weight: 500;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+  padding: 0;
+}
+
+
+//btn
+.btn {
+  height: 40px;
+  outline: none;
+  transition: all .3s;
+  padding: 0 20px;
+  font-size: 14px;
+
+  &.btn-blue {
+    background: var(--main-blue);
+    color: var(--white);
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}

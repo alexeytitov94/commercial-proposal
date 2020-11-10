@@ -59,13 +59,14 @@ export default {
 }
 </script>
 
-<style lang="sass">
-  body
-    padding-top: 60px
+<style lang="scss">
+body {
+  padding-top: 60px;
+}
 
-  input, textarea
-    background: none
-    border: none
-    outline: 0 !important
-
+input, textarea {
+  background: none;
+  border: none;
+  outline: 0 !important;
+}
 </style>

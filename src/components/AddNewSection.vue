@@ -65,6 +65,12 @@ export default {
     }
   },
   methods: {
+    htmlspecialchars(str) {
+      if (typeof(str) == "string") {
+        str = str.replaceAll('&quot;', `"`)
+      }
+      return str;
+    },
     getElementsBlock() {
 
       var ctx = this;
@@ -134,7 +140,7 @@ export default {
 
       let result = {
         "title": this.elementsChose.element.title,
-        "description": this.elementsChose.element.description,
+        "description": this.htmlspecialchars(this.elementsChose.element.description),
         "table_title": this.elementsChose.element.table_title,
         "full_price": this.elementsChose.element.full_price ? this.elementsChose.element.full_price:'0',
         "products": [this.elementsChose.product]
@@ -151,48 +157,58 @@ export default {
 }
 </script>
 
-<style scoped lang="sass">
-.elements
-  width: 100%
+<style scoped lang="scss">
+.elements {
+  width: 100%;
 
-  .title
-    display: flex
-    justify-content: space-between
-    align-items: center
-    align-content: center
+  .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
 
-    img
-      width: 25px
-      height: 25px
+    img {
+      width: 25px;
+      height: 25px;
+    }
+  }
 
-  .elements-container
-    .element-item
-        margin: 10px
+  .elements-container {
+    .element-item {
+      margin: 10px;
+    }
+  }
 
-  .active .item
-      background: #1c064d
-      color: #fff
+  .active {
+    .item {
+      background: var(--main-blue);
+      color: var(--white);
+    }
+  }
 
-  .item
-    display: flex
-    justify-content: center
-    align-items: center
-    border: 1px solid rgba(201, 201, 201, 0.19)
-    box-sizing: border-box
-    box-shadow: 0px 5px 10px rgba(88, 88, 88, 0.18)
-    border-radius: 6px
-    min-height: 80px
-    font-weight: 500
-    font-size: .80rem
-    cursor: pointer
-    background: #fff
-    padding: 10px
-    flex-direction: column
+  .item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid var(--support-silver);
+    box-sizing: border-box;
+    border-radius: 6px;
+    min-height: 80px;
+    font-weight: 500;
+    font-size: 0.8rem;
+    cursor: pointer;
+    background: #fff;
+    padding: 10px;
+    flex-direction: column;
+  }
 
-  .elements-item-products
-    border-radius: 3px
-    background: #eeeeee63
+  .elements-item-products {
+    border-radius: 3px;
+    background: #eeeeee63;
 
-    .elements-item-product
-      margin: 10px
+    .elements-item-product {
+      margin: 10px;
+    }
+  }
+}
 </style>
