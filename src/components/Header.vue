@@ -170,51 +170,16 @@ export default {
                 try {
                     doc=new window.docxtemplater()
                     .loadZip(zip)
-                    .attachModule(imageModule);
                 } catch(error) {
                     errorHandler(error);
                 }
 
                 doc.setData({
-                    "title_document": 'title_document',
-                    "full_price": 'full_price',
-                    "date_kp": 'date_kp',
-                    "section": [
-                        {
-                            "title": "Лицензия Битрикс24",
-                            "description": "На основании озвученных задач (до детального составления технического задания) оптимальным выбором может являться использование облачной версии Битрикс24 с тарифом «Команда».\n 1С-Битрикс позволяет переходить с одного тарифа на другой, а также при необходимости перейти в коробочную версию Битрикс24. \n",
-                            "table_title": "Доработка портала Битрикс24",
-                            "full_price": "57 480 ₽",
-                            "products": [
-                                {
-                                    "index": 1,
-                                    "active": true,
-                                    "description_field": 'test',
-                                    "roll": false,
-                                    "product_title" :"'Битрикс24'. Облачная версия. Тариф «Команда»",
-                                    "list_description": [
-                                        { 'title_list_description': "- Указана стоимость за 1 месяц, при условии оформления подписки на 1 год." },
-                                        { 'title_list_description': "- Разработка архитектуры решения" },
-                                        { 'title_list_description': "- Формализация логики бизнес-процессов в архитектуре Битрикс24" },
-                                        { 'title_list_description': "- Уточнение деталей с сотрудниками, принимающими участие в бизнес-процессах компании" },
-                                    ],
-                                    "price": "4 790 ₽/мес",
-                                    "type_price": "₽",
-                                    "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QIJBywfp3IOswAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAkUlEQVQY052PMQqDQBREZ1f/d1kUm3SxkeAF/FdIjpOcw2vpKcRWCwsRPMFPsaIQSIoMr5pXDGNUFd9j8TOn7kRW71fvO5HTq6qqtnWtzh20IqE3YXtL0zyKwAROQLQ5l/c9gHjfKK6wMZjADE6s49Dver4/smEAc2CuqgwAYI5jU9NcxhHEy60sni986H9+vwG1yDHfK1jitgAAAABJRU5ErkJggg=="
-                                    //"image": "https://aokmo.ru/upload/iblock/7fe/road_sign_361513_960_720.jpg"
-
-                                }
-                            ]
-                        },
-                    ]
+                    "title_document": documents.title_document,
+                    "full_price": documents.full_price + " " + documents.type_price,
+                    "date_kp": documents.day_complete,
+                    "section": arData
                 });
-
-                // doc.setData({
-                //     "title_document": documents.title_document,
-                //     "full_price": documents.full_price + " " + documents.type_price,
-                //     "date_kp": documents.day_complete,
-                //     "section": arData
-                // });
 
                 console.log(arData)
 
