@@ -1,4 +1,4 @@
-Создание КП
+Создание КП. Фронт
 
 ![image](https://user-images.githubusercontent.com/24390296/157312030-8443e676-8e5c-44c3-b7dd-a189745c15f2.png)
 
