@@ -1,24 +1,12 @@
-# kp-stockwell
+Создание КП
 
-## Project setup
-```
-npm install
-```
+![image](https://user-images.githubusercontent.com/24390296/157311970-a6a4ee81-b3ea-4181-a8a3-23b8dc84331d.png)
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
 
-### Compiles and minifies for production
-```
-npm run build
-```
+![image](https://user-images.githubusercontent.com/24390296/157312030-8443e676-8e5c-44c3-b7dd-a189745c15f2.png)
 
-### Lints and fixes files
-```
-npm run lint
-```
+![image](https://user-images.githubusercontent.com/24390296/157312108-7261080b-8e59-4d16-a697-a123a9741df3.png)
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+
+![image](https://user-images.githubusercontent.com/24390296/157312140-62744026-9619-4eb1-b5c7-e7008570ca67.png)
+
